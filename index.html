@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body bgcolor="yellow">
+    <h1>Post</h1>
+    <br>
+    <label>Name: <input type="text" id="name"></label> <br>
+    <textarea name="desc" id="desc">Write here...</textarea>
+    <br>
+    <button id="post">Post</button>
+    <br>
+    <div id="res"></div>
+    <br>
+    <h1>Get</h1>
+    <div id="btns"></div>
+</body>
+<script>
+    let n=document.getElementById("name");
+    let d=document.getElementById("desc");
+    let p=document.getElementById("post");
+    let r=document.getElementById("res");
+    let bt=document.getElementById("btns");
+    async function post(){
+        let res=await fetch(`/add/${n.value}`,{
+            method:"POST",
+            body:  JSON.stringify(d.value),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        r.innerText=await res.text();
+    }
+    async function load(){
+        let res=await fetch("/load");
+        let s=""
+        let list=await res.json();
+        list.forEach(element => {
+            s+=`<a href="template/${element}.txt"><button>${element}</button></a>\n`;
+        });
+        bt.innerHTML=s;
+    }
+    load();
+    p.onclick=post;
+</script>
+</html>
